@@ -15,6 +15,8 @@ str2: .asciz "Aba"
 str3: .asciz "A man, a plan, a canal: Panama"
 str4: .asciz "123ab321"
 str5: .asciz "Socorram-me, subi no ônibus em Marrocos"
+str6: .asciz " "
+str7; .asciz "!!!"
 
 yes_str: .asciz "SIM\n"
 no_str:  .asciz "NAO\n"
@@ -56,6 +58,18 @@ main:
     la a0, str5
     li a1, 0            # a1 = left
     li a2, 38           # a2 = right
+    jal ra, is_palindromo
+    jal ra, print_result
+
+    la a0, str6
+    li a1, 0            # a1 = left
+    li a2, 0            # a2 = right
+    jal ra, is_palindromo
+    jal ra, print_result
+
+    la a0, str7
+    li a1, 0            # a1 = left
+    li a2, 2            # a2 = right
     jal ra, is_palindromo
     jal ra, print_result
 
