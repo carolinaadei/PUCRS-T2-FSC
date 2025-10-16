@@ -16,7 +16,7 @@ str3: .asciz "A man, a plan, a canal: Panama"
 str4: .asciz "123ab321"
 str5: .asciz "Socorram-me, subi no ônibus em Marrocos"
 str6: .asciz " "
-str7; .asciz "!!!"
+str7: .asciz "!!!"
 
 yes_str: .asciz "SIM\n"
 no_str:  .asciz "NAO\n"
