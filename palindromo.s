@@ -24,7 +24,7 @@ no_str:  .asciz "NAO\n"
     .text
     .globl main
 
-# O bloco data define as Strings que serão testadas e como será a exibição da verificação.
+# O bloco data define as Strings de teste e como será a exibição da verificação.
 # O text indica o início do código de execução e o globl main é onde começa o programa.
 
 # ------------------------------------------------------------
@@ -73,12 +73,15 @@ main:
     jal ra, is_palindromo
     jal ra, print_result
 
+   # Insira aqui o loop principal, ofereca ao usuario se ele deseja continuar ou não 
+
     # Encerrar
     li a7, 10          
     ecall
 
 # O bloco main cria os testes, primeiro ele carrega o endereço da String, depois define o índice inicial e o final, chama a recursão e exibe o resultado. 
-# A finalização define um código de encerramento e executa a chamada para encerrar o programa.
+# TODO: falar sobre o loop aqui 
+# A finalização define o código de encerramento e executa o chamado para encerrar o programa, também usa syscall 10, Exit.
 
 print_result:
     beq a0, x0, print_no
@@ -93,7 +96,7 @@ print_no:
     ecall
     jr ra
 
-# O bloco print_result exibe o resultado “SIM” ou “NAO”. Se o a0 for igual a zero, ele desvia para print_no, caso contrário, imprime “SIM”. Ambos utilizam a syscall 4 para imprimir e retornam à função chamadora.
+# O bloco print_result exibe o resultado “SIM” ou “NAO”. Se o a0 for igual a zero, ele desvia para print_no, caso contrário, imprime “SIM”. Ambos utilizam a syscall 4, Print string, para imprimir e retornam à função chamadora.
 
 # ------------------------------------------------------------
 # is_palindromo(base, left, right) -> a0 = 1 (SIM) / 0 (NAO)
@@ -144,7 +147,7 @@ skip_right:
     beq a0, x0, dec_right
     j compare_chars
 
-# O bloco skip_right começa a verificação do lado direito e repete o processo do esquerdo, verificando se os índices se cruzam, lendo o caractere da posição right e testando se ele é alfanumérico. Se não for, retrocede; se for, segue para a comparação.
+# O bloco skip_right começa a verificação do lado direito e repete o processo do esquerdo, verificando se os índices se cruzam, lendo o caractere da posição right e testando se ele é alfanumérico e se não for, retrocede; se for, segue para a comparação.
 
 dec_right:
     addi s2, s2, -1
@@ -180,7 +183,7 @@ compare_chars:
     j end_pal
 
 # O bloco compare_chars faz a leitura e normalização dos caracteres das extremidades, convertendo ambos para minúsculas com to_lower_ascii e comparando.
-# Se forem diferentes, retorna “NAO”. Se forem iguais, avança os índices e chama recursivamente a função.
+# Se forem diferentes, retorna “NAO” e se forem iguais, avança os índices e chama recursivamente a função.
 
 not_pal:
     li a0, 0
@@ -226,7 +229,7 @@ not_alnum:
     jr ra
 
 # O bloco is_alnum_ascii verifica se o caractere informado está dentro das faixas ASCII de 0-9, A-Z ou a-z.
-# Se estiver, retorna 1 (verdadeiro); se não, retorna 0 (falso).
+# Se estiver, retorna 1 (verdadeiro) e se não, retorna 0 (falso).
 
 to_lower_ascii:
     li t0, 'A'
@@ -238,4 +241,4 @@ done_lower:
     jr ra
 
 # O bloco to_lower_ascii converte letras maiúsculas (A-Z) para minúsculas (a-z) adicionando 32 ao código ASCII.
-# Caso o caractere não esteja nesse intervalo, ele é retornado sem alteração.
+# Caso o caractere não esteja nesse intervalo, ele é retornado e não ocorrem alterações.
