@@ -21,6 +21,11 @@ str7: .asciz "!!!"
 yes_str: .asciz "SIM\n"
 no_str:  .asciz "NAO\n"
 
+ask_continue: .asciz "Deseja testar outra string? (s/n): "
+ask_input:    .asciz "Digite uma string para testar: "
+user_answer:  .space 2
+input_str:    .space 100
+
     .text
     .globl main
 
@@ -73,15 +78,67 @@ main:
     jal ra, is_palindromo
     jal ra, print_result
 
-   # Insira aqui o loop principal, ofereca ao usuario se ele deseja continuar ou não 
+   # ------------------------------------------------------------
+   # Loop principal, oferece ao usuário se ele deseja continuar ou não
+   # ------------------------------------------------------------
+main_loop:
+    la a0, ask_continue
+    li a7, 4
+    ecall
+
+    la a0, user_answer
+    li a1, 2
+    li a7, 8
+    ecall
+
+    lbu t0, 0(user_answer)
+    li t1, 's'
+    li t2, 'S'
+    beq t0, t1, ask_string
+    beq t0, t2, ask_string
+    j exit_program
+
+ask_string:
+    la a0, ask_input
+    li a7, 4
+    ecall
+
+    la a0, input_str
+    li a1, 100
+    li a7, 8
+    ecall
+
+    la t0, input_str
+    li t1, 0
+count_len:
+    lbu t2, 0(t0)
+    beqz t2, got_length
+    addi t0, t0, 1
+    addi t1, t1, 1
+    j count_len
+
+got_length:
+    addi t1, t1, -1
+
+    la a0, input_str
+    li a1, 0
+    mv a2, t1
+    jal ra, is_palindromo
+    jal ra, print_result
+
+    j main_loop
+
+exit_program:
+    li a7, 10
+    ecall
 
     # Encerrar
     li a7, 10          
     ecall
 
 # O bloco main cria os testes, primeiro ele carrega o endereço da String, depois define o índice inicial e o final, chama a recursão e exibe o resultado. 
-# TODO: falar sobre o loop aqui 
-# A finalização define o código de encerramento e executa o chamado para encerrar o programa, também usa syscall 10, Exit.
+# O loop principal foi adicionado para permitir que o usuário digite novas strings e teste interativamente se são palíndromos. 
+# A finalização define o código de encerramento e executa a chamada para encerrar o programa, também usa syscall 10, Exit.
 
 print_result:
     beq a0, x0, print_no
