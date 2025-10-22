@@ -1,4 +1,4 @@
-# PUCRS-T2-FSC - Trabalho de Fundamentos de Sistemas Computacionais 
+# Trabalho de Fundamentos de Sistemas Computacionais (T2 de 2025/2)
 
 **→ Sobre o projeto**
 Este projeto implementa um verificador de palíndromos em Assembly RISC-V utilizando recursão. O programa cria verificações de strings de teste e permite ao usuário testar novas palavras. Na leitura das palavras, os caracteres não alfanuméricos e as diferenças entre letras maiúsculas e minúsculas são ignorados. Quando a string está vazia, ele a retorna como palíndromo. O projeto também implementa Assembly RISC-V em 32 bits, utiliza as convenções padrão de RISC-V, preserva os registradores em pilha e usa 3 tipos de syscall (4 para imprimir string, 8 para ler string e 10 para encerrar o programa).
