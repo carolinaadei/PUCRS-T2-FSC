@@ -29,58 +29,61 @@ input_str:    .space 100
     .text
     .globl main
 
-# O bloco data define as Strings de teste e como será a exibição da verificação.
-# O text indica o início do código de execução e o globl main é onde começa o programa.
+# O bloco data define strings de teste, mensagens de resultado e espaços para entrada do usuário. 
+# O bloco text indica o início do código executável e globl main define a entrada principal do programa.
 
 # ------------------------------------------------------------
 # main: chama is_palindromo para cada string de exemplo
 # ------------------------------------------------------------
 main:
     la a0, str1
-    li a1, 0            # a1 = left
-    li a2, 4            # a2 = right
+    li a1, 0
+    li a2, 4
     jal ra, is_palindromo
     jal ra, print_result
 
     la a0, str2
-    li a1, 0            # a1 = left
-    li a2, 2            # a2 = right
+    li a1, 0
+    li a2, 2
     jal ra, is_palindromo
     jal ra, print_result
 
     la a0, str3
-    li a1, 0            # a1 = left
-    li a2, 29           # a2 = right
+    li a1, 0
+    li a2, 29
     jal ra, is_palindromo
     jal ra, print_result
 
     la a0, str4
-    li a1, 0            # a1 = left
-    li a2, 7            # a2 = right
+    li a1, 0
+    li a2, 7
     jal ra, is_palindromo
     jal ra, print_result
 
     la a0, str5
-    li a1, 0            # a1 = left
-    li a2, 38           # a2 = right
+    li a1, 0
+    li a2, 38
     jal ra, is_palindromo
     jal ra, print_result
 
     la a0, str6
-    li a1, 0            # a1 = left
-    li a2, 0            # a2 = right
+    li a1, 0
+    li a2, 0
     jal ra, is_palindromo
     jal ra, print_result
 
     la a0, str7
-    li a1, 0            # a1 = left
-    li a2, 2            # a2 = right
+    li a1, 0
+    li a2, 2
     jal ra, is_palindromo
     jal ra, print_result
 
-   # ------------------------------------------------------------
-   # Loop principal, oferece ao usuário se ele deseja continuar ou não
-   # ------------------------------------------------------------
+# O bloco main realiza testes iniciais, carregando endereço, definindo índices de início e fim e chamando a função de verificação recursiva.
+# Depois chama print_result para exibir o resultado.
+
+# ------------------------------------------------------------
+# Loop principal para interação com usuário
+# ------------------------------------------------------------
 main_loop:
     la a0, ask_continue
     li a7, 4
@@ -98,6 +101,8 @@ main_loop:
     beq t0, t1, ask_string
     beq t0, t2, ask_string
     j exit_program
+
+# Pergunta se o usuário deseja continuar. Se a resposta for 's' ou 'S', chama ask_string; caso contrário, encerra o programa.
 
 ask_string:
     la a0, ask_input
@@ -117,7 +122,6 @@ count_len:
     addi t0, t0, 1
     addi t1, t1, 1
     j count_len
-
 got_length:
     addi t1, t1, -1
 
@@ -129,17 +133,14 @@ got_length:
 
     j main_loop
 
+# O bloco ask_string solicita que o usuário digite uma string, determina seu último índice e chama a função recursiva.
+# Em seguida, imprime o resultado e retorna ao loop principal.
+
 exit_program:
     li a7, 10
     ecall
 
-    # Encerrar
-    li a7, 10          
-    ecall
-
-# O bloco main cria os testes, primeiro ele carrega o endereço da String, depois define o índice inicial e o final, chama a recursão e exibe o resultado. 
-# O loop principal foi adicionado para permitir que o usuário digite novas strings e teste interativamente se são palíndromos. 
-# A finalização define o código de encerramento e executa a chamada para encerrar o programa, também usa syscall 10, Exit.
+# Encerra o programa usando a syscall exit.
 
 print_result:
     beq a0, x0, print_no
@@ -147,23 +148,16 @@ print_result:
     li a7, 4
     ecall
     jr ra
-
 print_no:
     la a0, no_str
     li a7, 4
     ecall
     jr ra
 
-# O bloco print_result exibe o resultado "SIM" ou "NAO". Se o a0 for igual a zero, ele desvia para print_no, caso contrário, imprime "SIM". Ambos utilizam a syscall 4, Print string, para imprimir e retornam à função chamadora.
+# O bloco print_result imprime "SIM" ou "NAO" de acordo com o valor em a0.
 
 # ------------------------------------------------------------
 # is_palindromo(base, left, right) -> a0 = 1 (SIM) / 0 (NAO)
-#  - IMPLEMENTE usando recursao:
-#    * pular nao-alfanumericos
-#    * comparar to_lower_ascii(base[left]) vs to_lower_ascii(base[right])
-#    * caso iguais: chamar recursivamente com (left+1, right-1)
-#    * caso diferentes: retornar NAO
-#    * parada: left >= right => SIM
 # ------------------------------------------------------------
 is_palindromo:
     addi sp, sp, -16
@@ -172,11 +166,9 @@ is_palindromo:
     sw s1, 4(sp)
     sw s2, 0(sp)
 
-    mv s0, a0 
+    mv s0, a0
     mv s1, a1
     mv s2, a2
-
-# O bloco is_palindromo inicia a função recursiva e cria espaço na pilha salvando o contexto da função, guarda os registradores necessários e copia os parâmetros para registradores salvos.
 
 skip_left:
     bge s1, s2, base_case
@@ -187,14 +179,9 @@ skip_left:
     beq a0, x0, inc_left
     j skip_right
 
-# O bloco skip_left inicia o loop verificando se os índices se cruzam, calcula o endereço do caractere em left, carrega o caractere da memória e move para o registrador de argumento, chama a função de verificação de ASCII.
-# Se não for alfanumérico, avança o índice da esquerda, senão, passa para o lado direito.
-
 inc_left:
     addi s1, s1, 1
     j skip_left
-
-# O bloco inc_left marca o ponto de incremento, somando 1 ao índice left e retornando ao início da verificação.
 
 skip_right:
     bge s1, s2, base_case
@@ -205,19 +192,13 @@ skip_right:
     beq a0, x0, dec_right
     j compare_chars
 
-# O bloco skip_right começa a verificação do lado direito e repete o processo do esquerdo, verificando se os índices se cruzam, lendo o caractere da posição right e testando se ele é alfanumérico e se não for, retrocede; se for, segue para a comparação.
-
 dec_right:
     addi s2, s2, -1
     j skip_right
 
-# O bloco dec_right retrocede o índice da direita, diminuindo 1, e volta para continuar o loop de verificação.
-
 base_case:
     li a0, 1
     j end_pal
-
-# O bloco base_case representa o caso de parada da recursão. Se os índices se cruzarem ou se igualarem, o texto é considerado palíndromo e retorna 1 (SIM).
 
 compare_chars:
     add t0, s0, s1
@@ -240,13 +221,8 @@ compare_chars:
     jal ra, is_palindromo
     j end_pal
 
-# O bloco compare_chars faz a leitura e normalização dos caracteres das extremidades, convertendo ambos para minúsculas com to_lower_ascii e comparando.
-# Se forem diferentes, retorna "NAO" e se forem iguais, avança os índices e chama recursivamente a função.
-
 not_pal:
     li a0, 0
-
-# O bloco not_pal define o retorno 0 (NAO) quando os caracteres das extremidades não são iguais.
 
 end_pal:
     lw ra, 12(sp)
@@ -256,7 +232,8 @@ end_pal:
     addi sp, sp, 16
     jr ra
 
-# O bloco end_pal restaura o contexto salvo na pilha (registradores e endereço de retorno), libera o espaço da pilha e retorna o controle para a função chamadora.
+# O bloco is_palindromo realiza a recursão completa, pulando caracteres não alfanuméricos e comparando caracteres convertidos para minúsculo.
+# Retorna 1 se for palíndromo e 0 se não for, restaurando o contexto ao final.
 
 is_alnum_ascii:
     li t0, '0'
@@ -265,7 +242,6 @@ is_alnum_ascii:
     bgt a0, t1, check_AZ
     li a0, 1
     jr ra
-
 check_AZ:
     li t0, 'A'
     li t1, 'Z'
@@ -273,7 +249,6 @@ check_AZ:
     bgt a0, t1, check_az
     li a0, 1
     jr ra
-
 check_az:
     li t0, 'a'
     li t1, 'z'
@@ -281,13 +256,12 @@ check_az:
     bgt a0, t1, not_alnum
     li a0, 1
     jr ra
-
 not_alnum:
     li a0, 0
     jr ra
 
-# O bloco is_alnum_ascii verifica se o caractere informado está dentro das faixas ASCII de 0-9, A-Z ou a-z.
-# Se estiver, retorna 1 (verdadeiro) e se não, retorna 0 (falso).
+# O bloco is_alnum_ascii verifica se o caractere está entre '0'-'9', 'A'-'Z' ou 'a'-'z'.
+# Retorna 1 se for alfanumérico ou 0 se não for.
 
 to_lower_ascii:
     li t0, 'A'
@@ -298,5 +272,4 @@ to_lower_ascii:
 done_lower:
     jr ra
 
-# O bloco to_lower_ascii converte letras maiúsculas (A-Z) para minúsculas (a-z) adicionando 32 ao código ASCII.
-# Caso o caractere não esteja nesse intervalo, ele é retornado e não ocorrem alterações.
+# O bloco to_lower_ascii converte letras maiúsculas para minúsculas. Caracteres fora do intervalo permanecem inalterados.
