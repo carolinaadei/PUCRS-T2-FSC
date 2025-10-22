@@ -91,7 +91,8 @@ main_loop:
     li a7, 8
     ecall
 
-    lbu t0, 0(user_answer)
+    la t4, user_answer
+    lbu t0, 0(t4)
     li t1, 's'
     li t2, 'S'
     beq t0, t1, ask_string
@@ -153,7 +154,7 @@ print_no:
     ecall
     jr ra
 
-# O bloco print_result exibe o resultado “SIM” ou “NAO”. Se o a0 for igual a zero, ele desvia para print_no, caso contrário, imprime “SIM”. Ambos utilizam a syscall 4, Print string, para imprimir e retornam à função chamadora.
+# O bloco print_result exibe o resultado "SIM" ou "NAO". Se o a0 for igual a zero, ele desvia para print_no, caso contrário, imprime "SIM". Ambos utilizam a syscall 4, Print string, para imprimir e retornam à função chamadora.
 
 # ------------------------------------------------------------
 # is_palindromo(base, left, right) -> a0 = 1 (SIM) / 0 (NAO)
@@ -240,7 +241,7 @@ compare_chars:
     j end_pal
 
 # O bloco compare_chars faz a leitura e normalização dos caracteres das extremidades, convertendo ambos para minúsculas com to_lower_ascii e comparando.
-# Se forem diferentes, retorna “NAO” e se forem iguais, avança os índices e chama recursivamente a função.
+# Se forem diferentes, retorna "NAO" e se forem iguais, avança os índices e chama recursivamente a função.
 
 not_pal:
     li a0, 0
