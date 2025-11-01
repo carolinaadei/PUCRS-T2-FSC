@@ -1,8 +1,11 @@
 # Trabalho de Fundamentos de Sistemas Computacionais (T2 de 2025/2)
 
 **→ Sobre o projeto**
-Este projeto implementa um verificador de palíndromos em Assembly RISC-V utilizando recursão. O programa realiza testes automáticos em strings predefinidas e permite ao usuário testar novas palavras ou frases. Durante a verificação: Caracteres não alfanuméricos são ignorados, a diferenças entre letras maiúsculas e minúsculas são ignoradas e as Strings vazias ou compostas apenas por caracteres não alfanuméricos são consideradas palíndromos. O projeto segue as convenções padrão de Assembly RISC-V 32 bits, preservando registradores em pilha, e utiliza syscalls para entrada e saída.
-Recursão utilizada para percorrer os extremos da string comparando os caracteres de fora para dentro.
+Este projeto implementa um verificador de palíndromos em Assembly RISC-V utilizando recursão. O programa realiza testes automáticos em strings predefinidas e permite ao usuário testar novas palavras ou frases. Durante a verificação: Caracteres não alfanuméricos são ignorados, a diferenças entre letras maiúsculas e minúsculas são ignoradas e as Strings vazias ou compostas apenas por caracteres não alfanuméricos são consideradas palíndromos. O projeto segue as convenções padrão de Assembly RISC-V 32 bits, preservando registradores em pilha, e utiliza syscalls para entrada e saída. Recursão utilizada para percorrer os extremos da string comparando os caracteres de fora para dentro.
+
+Além das funcionalidades principais, o projeto também implementa duas funcionalidades bônus:
+- Remoção de acentos simples (ex.: “á”, “à”, “ã”, “â”, “ä”, “ç”) são convertidos para suas formas sem acento antes da comparação.
+- Estatísticas adicionais: o programa exibe o número de caracteres ignorados e a profundidade máxima atingida pela recursão após cada verificação.
 
 Syscalls usadas:
 - 4 → imprimir string
@@ -22,6 +25,7 @@ bloco is_palindromo:
 - Ignora caracteres não alfanuméricos (is_alnum_ascii).
 - Converte letras maiúsculas para minúsculas (to_lower_ascii).
 - Retorna 1 se a string for palíndromo, 0 caso contrário.
+- Remove acentos simples antes da comparação e contabiliza a profundidade máxima de recursão.
 
 bloco is_alnum_ascii:
 - Verifica se um caractere é alfanumérico (0-9, A-Z, a-z).
@@ -33,6 +37,7 @@ bloco to_lower_ascii:
 
 bloco print_result:
 - Exibe "SIM" ou "NAO" de acordo com o resultado retornado por is_palindromo.
+- Exibe também o número de caracteres ignorados e a profundidade máxima da recursão.
 
 bloco strlen_ascii:
 - Calcula o comprimento da string, retornando o índice do último caractere válido.
@@ -42,7 +47,7 @@ bloco strlen_ascii:
 2. "Aba" -> SIM
 3. "A man, a plan, a canal: Panama" → SIM
 4. "123ab321" → NAO
-5. "Socorram-me, subi no ônibus em Marrocos" → SIM
+5. "Socorram-me, subi no ônibus em Marrocos" → NAO
 6. " " → SIM
 7. "!!!" → SIM
 
@@ -53,9 +58,10 @@ O arquivo rars1_6.jar é o RARS (RISC-V Assembler and Runtime Simulator). Este a
 - Ter Java instalado (v8 ou superior)
 - Ter o arquivo rars1_6.jar no diretório do projeto
 - Ter o arquivo palindromo.s (código)
-  
-- Para executar, deve-se abrir o projeto na IDE de preferência e abrir o terminal, navegar para o diretório cd caminhoParaProjeto e executar o comando `java -jar rars1_6.jar palindromo.s`
+
+- Para executar, deve-se abrir o projeto na IDE de preferência e abrir o terminal, navegar para o diretório cd caminhoParaProjeto e executar o comando java -jar rars1_6.jar palindromo.s
 - Após a execução, o programa vai exibir os resultados das strings de teste, perguntar se o usuário deseja continuar e repetir o processo.
+- Ao final de cada teste, o programa também exibirá quantos caracteres foram ignorados e qual foi a profundidade máxima alcançada pela recursão.
 
 **→ Integrantes**
 - Carolina De Souza Gonçalves
